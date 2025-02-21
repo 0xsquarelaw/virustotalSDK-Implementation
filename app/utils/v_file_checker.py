@@ -13,10 +13,6 @@ async def check_file_report(file_path: str):
     
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
-        
-    # Check file size bcz VirusTotal limit is 32MB for basic API
-    if os.path.getsize(file_path) > 32 * 1024 * 1024:
-        raise ValueError("File size exceeds VirusTotal's 32MB limit")
 
     client = vt.Client(api_key)
     try:
@@ -46,14 +42,14 @@ async def upload_file_for_report(client, file_path: str):
             
             while True:
                 if retry_count >= max_retries:
-                    raise TimeoutError("Analysis timed out after 60 seconds")
+                    raise TimeoutError("Analysis timed out after 240 seconds/4 minutes/12 retries")
                     
                 analysis = await client.get_object_async(f"/analyses/{analysis.id}")
                 if analysis.status == "completed":
                     break
                     
                 retry_count += 1
-                time.sleep(5)
+                time.sleep(20)
                 
         file_result = await client.get_object_async(f"/files/{analysis.id}")
         return file_result.last_analysis_stats
