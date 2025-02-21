@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI, UploadFile, HTTPException
 from utils.v_file_checker import check_file_report
+from utils.v_url_checker import check_url_report
 
 app = FastAPI()
 
@@ -31,4 +32,12 @@ async def create_upload_file(file: UploadFile):
         # Ensure cleanup even if error occurs
         if 'file_path' in locals() and os.path.exists(file_path):
             os.remove(file_path)
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/urlcheck/")
+async def check_url(url: str):
+    try:
+        result = await check_url_report(url)
+        return result
+    except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
