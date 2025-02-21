@@ -14,19 +14,15 @@ async def create_upload_file(file: UploadFile):
     try:
         os.makedirs("temp", exist_ok=True)
         file_path = f"temp/{file.filename}"
-        
-        # Save uploaded file
         with open(file_path, "wb") as buffer:
             content = await file.read()
             buffer.write(content)
         
         # Check file report
         result = await check_file_report(file_path)
-        
-        # Cleanup
+
         if os.path.exists(file_path):
-            os.remove(file_path)
-            
+            os.remove(file_path) 
         return {
             "filename": file.filename,
             "scan_result": result
