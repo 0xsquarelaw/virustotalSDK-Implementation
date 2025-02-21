@@ -2,31 +2,36 @@ import vt
 import os
 from utils.hashcalculator import calculate_file_hash
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 api_key = os.getenv("VIRUSTOTAL_API_KEY")
 
-def check_file_report(file_path: str):
+async def check_file_report(file_path: str):
     if not api_key:
         raise ValueError("VirusTotal API key not found in environment variables")
-    try:
-        with vt.Client(api_key) as client:
-            file_hash = calculate_file_hash(file_path)
-            file_result = client.get_object(f"/files/{file_hash}")
-            
-            if file_result is None or not hasattr(file_result, 'last_analysis_stats'):
-                return upload_file_for_report(file_path)
-            return file_result.last_analysis_stats       
-    except Exception as e:
-        print(f"Error during file analysis: {e}")
-        return upload_file_for_report(file_path)
 
-def upload_file_for_report(file_path: str):
-    print("Running function due to missing JSON data for that file --- uploading file for analysis ---- (Wait for Result)")
+    client = vt.Client(api_key)
     try:
-        with vt.Client(api_key) as client:
-            with open(file_path, "rb") as f:
-                file_result = client.scan_file(f, wait_for_completion=True)
-            return file_result
-    except Exception as e:
-        raise Exception(f"Error uploading file for analysis: {e}")
+        file_hash = calculate_file_hash(file_path)
+        file_result = await client.get_object_async(f"/files/{file_hash}")
+        if hasattr(file_result, 'last_analysis_stats'):
+                return file_result.last_analysis_stats
+        else:
+            return await upload_file_for_report(client, file_path)
+    except:
+        print("File ki gand mar gayi h")
+    finally:
+        await client.close_async()
+
+async def upload_file_for_report(client, file_path: str):
+    # Uploading file for analysis...
+    with open(file_path, "rb") as f:
+        analysis = await client.scan_file_async(f)
+        while True:
+            analysis = await client.get_object_async(f"/analyses/{analysis.id}")
+            if analysis.status == "completed":
+                break
+            time.sleep(5)
+    file_result = await client.get_object_async(f"/files/{analysis.id}")
+    return file_result.last_analysis_stats
