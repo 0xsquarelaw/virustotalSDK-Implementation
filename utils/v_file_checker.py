@@ -1,6 +1,6 @@
 import vt
 import os
-from lib.hashcalculator import calculate_file_hash
+from utils.hashcalculator import calculate_file_hash
 from dotenv import load_dotenv
 
 load_dotenv()
