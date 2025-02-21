@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Security Scanner</h1>
+
+    <div class="container">
+        <h2>URL Scanner</h2>
+        <input type="text" id="urlInput" placeholder="Enter URL to scan">
+        <button onclick="checkURL()">Scan URL</button>
+        <div id="urlResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>File Scanner</h2>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Scan File</button>
+        <div id="fileResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        async function checkURL() {
+            const url = document.getElementById('urlInput').value;
+            const resultDiv = document.getElementById('urlResult');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/urlcheck/?url=${encodeURIComponent(url)}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const resultDiv = document.getElementById('fileResult');
+            
+            if (!fileInput.files.length) {
+                resultDiv.textContent = 'Please select a file';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/uploadfile/`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

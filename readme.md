@@ -5,6 +5,13 @@ cd ".venv\Scripts\" ; .\Activate.ps1; cd "../../"; clear
 
 pip install "fastapi[standard]" python-dotenv vt-py
 
+cd backend
+activate venv
+`fastapi dev main.py`
+
+cd frontend
+`python -m http.server 3000`
+
 ## References
 
 https://shreshtait.com/blog/2024/01/what-are-newly-registered-domain-names/

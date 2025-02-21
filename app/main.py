@@ -2,8 +2,17 @@ import os
 from fastapi import FastAPI, UploadFile, HTTPException
 from utils.v_file_checker import check_file_report
 from utils.v_url_checker import check_url_report
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root_dir():
