@@ -40,7 +40,7 @@ https://github.com/VirusTotal/vt-py
 
 ### Additional commands
 
-git archive -o output.zip master
+- `git archive -o output.zip master`
 
 ## Note:
 
