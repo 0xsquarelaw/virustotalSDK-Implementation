@@ -1,16 +1,34 @@
-python -m venv .venv
+### First Setup Python Virtual Environment
 
-cd ".venv\Scripts\" ; .\Activate.ps1; cd "../../"; clear
-`to deactivate env` deactivate
+`python -m venv .venv`
 
-pip install "fastapi[standard]" python-dotenv vt-py
+## Requirements
+
+`pip install "fastapi[standard]" python-dotenv vt-py`
+
+## To Run
 
 cd backend
-activate venv
-`fastapi dev main.py`
+
+#### Window PowerShell command (activate venv)
+
+```Powershell
+cd ".venv\Scripts\" ; .\Activate.ps1; cd "../../"; clear
+```
+
+To deactivate:
+
+- `deactivate`
+
+## Run Backend Server
+
+- `fastapi dev main.py`
+
+## Run Frontend Server
 
 cd frontend
-`python -m http.server 3000`
+
+- `python -m http.server 3000`
 
 ## References
 
@@ -18,6 +36,12 @@ https://shreshtait.com/blog/2024/01/what-are-newly-registered-domain-names/
 
 https://github.com/shreshta-labs/newly-registered-domains
 
+https://github.com/VirusTotal/vt-py
+
 ### Additional commands
 
 git archive -o output.zip master
+
+## Note:
+
+i m not implemeted premium features of vt-py
