@@ -17,3 +17,7 @@ cd frontend
 https://shreshtait.com/blog/2024/01/what-are-newly-registered-domain-names/
 
 https://github.com/shreshta-labs/newly-registered-domains
+
+### Additional commands
+
+git archive -o output.zip master
