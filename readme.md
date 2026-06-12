@@ -42,6 +42,10 @@ https://github.com/VirusTotal/vt-py
 
 - `git archive -o output.zip master`
 
+---
+### Preview Image
+![Frontend Preview](./preview.png)
+
 ## Note:
 
-i m not implemeted premium features of vt-py
+i have not implemeted premium features of vt-py
